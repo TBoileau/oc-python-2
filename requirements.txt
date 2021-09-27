@@ -1,7 +1,7 @@
 astroid==2.8.0
 attrs==21.2.0
 autopep8==1.5.7
-black==21.9b1.dev7+g39b55f7
+black==21.9b0
 click==8.0.1
 coverage==5.5
 flake8==3.9.2

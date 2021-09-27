@@ -7,7 +7,7 @@ freeze:
 	${PYTHON} -m pip freeze > requirements.txt
 
 install:
-	python3 -m pip install -U pip
+	python3 -m pip install --upgrade pip
 	python3 -m venv $(VENV_NAME)
 	${PYTHON} -m pip install -r requirements.txt
 
