@@ -8,57 +8,33 @@ import requests
 from bs4 import BeautifulSoup, ResultSet, Tag
 
 from src.entity.book import Book
+from src.entity.category import Category
 from src.entity.price import Price
 from src.gateway.book_gateway import BookGateway
+from src.parser.abstract_parser import AbstractParser
 
 
-class BookParser(BookGateway):
+class BookParser(BookGateway, AbstractParser):
     """
     Adapter of port BookGateway
     """
 
-    def __init__(self, url: str):
+    def find_by_category(
+        self, category: Category, page=1
+    ) -> Generator[Book, None, None]:
         """
-        Constructor
+        Retrieve book by category
 
-        :param url:
-        """
-        self.__url: ParseResult = parse.urlparse(url)
-
-    def generate_url(self, path: str) -> str:
-        """
-        Generate url from path
-
-        :param path:
-        :return:
-        """
-        return f"{self.__url.scheme}://{self.__url.netloc}{path}"
-
-    def find_all(self, path: str) -> Generator[Book, None, None]:
-        """
-        Retrieve all books
-
-        :param path:
+        :param page:
+        :param category:
         :return:
         """
 
-        response: requests.Response = requests.get(self.generate_url(path))
-        crawler: BeautifulSoup = BeautifulSoup(response.content, "html.parser")
-        categories: ResultSet = crawler.select(
-            "div.side_categories > ul.nav > li > ul > li > a"
+        page_path: str = f"page-{page}.html" if page > 1 else "index.html"
+
+        response: requests.Response = requests.get(
+            f"{category.url[0:category.url.rfind('/')]}/{page_path}"
         )
-        for category in categories:
-            yield from self.find_by_category(f"/{category['href']}")
-
-    def find_by_category(self, path: str) -> Generator[Book, None, None]:
-        """
-        Retrieve book by url
-
-        :param path:
-        :return:
-        """
-
-        response: requests.Response = requests.get(self.generate_url(path))
         crawler: BeautifulSoup = BeautifulSoup(response.content, "html.parser")
 
         books: ResultSet = crawler.select("article.product_pod > h3 > a")
@@ -71,15 +47,13 @@ class BookParser(BookGateway):
         next_page: Optional[Tag] = crawler.select_one("ul.pager > li.next > a")
 
         if next_page is not None:
-            yield from self.find_by_category(
-                f"{path[0:path.rfind('/')]}/{next_page['href']}"
-            )
+            yield from self.find_by_category(category, page + 1)
 
     def find(self, path: str) -> Optional[Book]:
         """
         Retrieve books by category
 
-        :param url:
+        :param path:
         :return:
         """
         url: str = self.generate_url(path)
@@ -135,7 +109,14 @@ class BookParser(BookGateway):
             "div#product_description + p"
         )
 
+        category: Tag = crawler.select_one(
+            "ul.breadcrumb > li:nth-child(3) > a"
+        )
+
         return Book(
+            category=Category(
+                self.generate_url(category["href"]), category.text.strip()
+            ),
             url=url,
             code=crawler.select_one(
                 "table > tr:nth-child(1) > td:last-child"
@@ -156,9 +137,6 @@ class BookParser(BookGateway):
                     ).groups()[0]
                 ),
             )[crawler.select_one("p.instock.availability") is not None],
-            category=crawler.select_one(
-                "ul.breadcrumb > li:nth-child(3) > a"
-            ).text.strip(),
             rating=rating,
             image=f"{parsed_url.scheme}://{parsed_url.netloc}/{image_url}",
         )

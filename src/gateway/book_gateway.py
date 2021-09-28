@@ -3,6 +3,7 @@ from abc import ABC
 from typing import Optional, Generator
 
 from src.entity.book import Book
+from src.entity.category import Category
 
 
 class BookGateway(ABC):
@@ -18,18 +19,13 @@ class BookGateway(ABC):
         :return:
         """
 
-    def find_by_category(self, path: str) -> Generator[Book, None, None]:
+    def find_by_category(
+        self, category: Category, page: int = 1
+    ) -> Generator[Book, None, None]:
         """
         Retrieve books by category
 
-        :param path:
-        :return:
-        """
-
-    def find_all(self, path: str) -> Generator[Book, None, None]:
-        """
-        Retrieve all books
-
-        :param path:
+        :param page:
+        :param category:
         :return:
         """
