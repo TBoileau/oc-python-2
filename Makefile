@@ -17,9 +17,8 @@ clean:
 	rm -rf htmlcov
 
 fix:
-	$(PYTHON) -m black ./src
-	$(PYTHON) -m autopep8 --recursive --in-place --aggressive --aggressive ./src/*
-
+	$(PYTHON) -m black --line-length 79 ./src
+	$(PYTHON) -m autopep8 --recursive --in-place --aggressive --max-line-length=79 ./src/*
 
 analyse:
 	$(PYTHON) -m flake8 ./src
