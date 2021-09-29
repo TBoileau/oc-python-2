@@ -1,6 +1,6 @@
 """Imported modules/packages"""
-from src.entity.category import Category
 from src.entity.price import Price
+from src.url_generator.url import Url
 
 
 class Book:
@@ -10,21 +10,34 @@ class Book:
 
     def __init__(
         self,
-        category: Category,
-        url: str,
+        url: Url,
+        price: Price,
+        path: str,
         code: str,
         title: str,
-        price: Price,
         stock: int,
         description: str,
         rating: int,
         image: str,
     ):
-        self.category: Category = category
-        self.url: str = url
+        """
+        Constructor
+
+        :param price:
+        :param url:
+        :param path:
+        :param code:
+        :param title:
+        :param stock:
+        :param description:
+        :param rating:
+        :param image:
+        """
+        self.price: Price = price
+        self.url: Url = url
+        self.path: str = path
         self.code: str = code
         self.title: str = title
-        self.price: Price = price
         self.stock: int = stock
         self.description: str = description
         self.rating: int = rating
