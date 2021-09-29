@@ -1,4 +1,8 @@
 """Imported modules/packages"""
+from typing import List
+
+from src.entity.book import Book
+from src.url_generator.url import Url
 
 
 class Category:
@@ -6,12 +10,13 @@ class Category:
     Category entity
     """
 
-    def __init__(self, url: str, name: str):
+    def __init__(self, url: Url, name: str):
         """
         Constructor
 
-        :param url:
+        :param path:
         :param name:
         """
-        self.url: str = url
+        self.url: Url = url
         self.name: str = name
+        self.books: List[Book] = []
