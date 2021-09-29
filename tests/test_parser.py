@@ -22,7 +22,7 @@ def httpserver_listen_address() -> Tuple[str, int]:
 
 def handler(request: Request):
     url: ParseResult = urlparse(request.url)
-    content: str = open(f"fixtures/books.toscrape.com{url.path}").read()
+    content: str = open(f"fixtures/{url.path}").read()
     return Response(content)
 
 def test_get_list_of_categories(httpserver):
@@ -36,4 +36,4 @@ def test_get_list_of_categories(httpserver):
     assert reduce(
         lambda number_of_books, y: y + number_of_books,
         map(lambda category: len(category.books), categories)
-    ) == 999
+    ) == 1000
