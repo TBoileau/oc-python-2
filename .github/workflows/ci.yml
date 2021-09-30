@@ -14,8 +14,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Build
         run: |
-          make install
+          make prepare
           venv/bin/activate
+          make install
       - name: Analyse
         run: make analyse
       - name: Tests
