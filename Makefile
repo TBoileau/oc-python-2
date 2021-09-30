@@ -6,9 +6,11 @@ PYTHON=${VENV_NAME}/bin/python
 freeze:
 	${PYTHON} -m pip freeze > requirements.txt
 
-install:
+prepare:
 	python3 -m pip install --upgrade pip
 	python3 -m venv $(VENV_NAME)
+
+install:
 	${PYTHON} -m pip install -r requirements.txt
 
 clean:

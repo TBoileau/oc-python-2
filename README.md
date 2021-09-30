@@ -10,14 +10,19 @@ Dans un premier temps, cloner le repository :
 git clone https://github.com/TBoileau/oc-python-3.git
 ```
 
-Procéder à l'installation du projet :
+Préparer votre environnement :
 ```
-make install
+make prepare
 ```
 
 Activer votre environnement :
 ```
 source venv/bin/activate
+```
+
+Installer les dépendances :
+```
+make install
 ```
 
 ## Usage
