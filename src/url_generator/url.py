@@ -32,3 +32,10 @@ class Url:
         :return:
         """
         return self.__url.path
+
+    @property
+    def partial(self) -> str:
+        """
+        Get last part of path
+        """
+        return self.path[self.path.rfind("/") + 1:]

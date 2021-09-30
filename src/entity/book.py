@@ -18,7 +18,7 @@ class Book:
         stock: int,
         description: str,
         rating: int,
-        image: str,
+        image: Url,
     ):
         """
         Constructor
@@ -41,4 +41,4 @@ class Book:
         self.stock: int = stock
         self.description: str = description
         self.rating: int = rating
-        self.image: str = image
+        self.image: Url = image

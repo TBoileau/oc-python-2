@@ -6,11 +6,14 @@ from typing import List, Generator, Optional
 from bs4 import ResultSet, BeautifulSoup, Tag
 from requests import HTTPError
 
+
 from src.crawler.crawler_interface import CrawlerInterface
 from src.entity.book import Book
 from src.entity.category import Category
 from src.entity.price import Price
 from src.parser.parser_interface import ParserInterface
+from src.uploader.uploader_interface import UploaderInterface
+from src.url_generator.url import Url
 from src.url_generator.url_generator_interface import UrlGeneratorInterface
 
 
@@ -19,9 +22,10 @@ class Parser(ParserInterface):
     Parser implementation
     """
 
-    def __init__(self, crawler: CrawlerInterface, url_generator: UrlGeneratorInterface):
+    def __init__(self, crawler: CrawlerInterface, url_generator: UrlGeneratorInterface, uploader: UploaderInterface):
         self.__crawler: CrawlerInterface = crawler
         self.__url_generator: UrlGeneratorInterface = url_generator
+        self.__uploader: UploaderInterface = uploader
 
     def __get_products(self, path: str, page: int = 1) -> Generator[Book, None, None]:
 
@@ -75,7 +79,11 @@ class Parser(ParserInterface):
             elif "Five" in bs4.select_one("p.star-rating")["class"]:
                 rating = 5
 
-            image_url: str = bs4.select_one("div#product_gallery img")["src"].replace("../../", "")
+            image_web_url: Url = self.__url_generator.generate(
+                bs4.select_one("div#product_gallery img")["src"].replace("../..", "")
+            )
+
+            image_url: Url = self.__uploader.upload(image_web_url)
 
             description: Optional[Tag] = bs4.select_one("div#product_description + p")
 
