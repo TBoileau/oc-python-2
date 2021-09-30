@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 from slugify import slugify
 
 from src.entity.category import Category
+from src.logger.logger_interface import LoggerInterface
 from src.url_generator.url import Url
 from src.writer.writer_interface import WriterInterface
 
@@ -15,6 +16,14 @@ class CsvWriter(WriterInterface):
     """
     Writer implementation
     """
+
+    def __init__(self, logger: LoggerInterface):
+        """
+        Constructor
+
+        :param logger:
+        """
+        self.__logger: LoggerInterface = logger
 
     def write(self, categories: List[Category], directory: str):
         for category in categories:
@@ -52,3 +61,4 @@ class CsvWriter(WriterInterface):
                         category.books,
                     )
                 )
+                self.__logger.log(f"Write csv : {destination.url}")

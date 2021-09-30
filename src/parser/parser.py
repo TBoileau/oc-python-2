@@ -11,6 +11,7 @@ from src.crawler.crawler_interface import CrawlerInterface
 from src.entity.book import Book
 from src.entity.category import Category
 from src.entity.price import Price
+from src.logger.logger_interface import LoggerInterface
 from src.parser.parser_interface import ParserInterface
 from src.uploader.uploader_interface import UploaderInterface
 from src.url_generator.url import Url
@@ -22,10 +23,25 @@ class Parser(ParserInterface):
     Parser implementation
     """
 
-    def __init__(self, crawler: CrawlerInterface, url_generator: UrlGeneratorInterface, uploader: UploaderInterface):
+    def __init__(
+        self,
+        crawler: CrawlerInterface,
+        url_generator: UrlGeneratorInterface,
+        uploader: UploaderInterface,
+        logger: LoggerInterface,
+    ):
+        """
+        Constructor
+
+        :param crawler:
+        :param url_generator:
+        :param uploader:
+        :param logger:
+        """
         self.__crawler: CrawlerInterface = crawler
         self.__url_generator: UrlGeneratorInterface = url_generator
         self.__uploader: UploaderInterface = uploader
+        self.__logger: LoggerInterface = logger
 
     def __get_products(self, path: str, page: int = 1) -> Generator[Book, None, None]:
 
@@ -97,7 +113,7 @@ class Parser(ParserInterface):
                 ),
             )[bs4.select_one("p.instock") is not None]
 
-            return Book(
+            book: Book = Book(
                 url=self.__url_generator.generate(path),
                 price=price,
                 path=path,
@@ -108,11 +124,17 @@ class Parser(ParserInterface):
                 rating=rating,
                 image=image_url,
             )
+
+            self.__logger.log(f"Load book : {book.title}")
+
+            return book
         except HTTPError:
             return None
 
     def __populate_category(self, tag: Tag) -> Category:
         category: Category = Category(self.__url_generator.generate(f"/{tag['href']}"), tag.text.strip())
+
+        self.__logger.log(f"Load category : {category.name}")
 
         for book in self.__get_products(category.url.path):
             category.books.append(book)
