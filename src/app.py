@@ -8,6 +8,8 @@ from src.crawler.crawler_interface import CrawlerInterface
 from src.entity.category import Category
 from src.http.http_client import HttpClient
 from src.http.http_client_interface import HttpClientInterface
+from src.logger.logger import Logger
+from src.logger.logger_interface import LoggerInterface
 from src.parser.parser import Parser
 from src.parser.parser_interface import ParserInterface
 from src.uploader.uploader import Uploader
@@ -51,11 +53,12 @@ class App:
         :return:
         """
         self.__create_folders()
+        logger: LoggerInterface = Logger()
         url_generator: UrlGeneratorInterface = UrlGenerator(self.__url)
         http_client: HttpClientInterface = HttpClient()
         crawler: CrawlerInterface = Crawler(url_generator, http_client)
-        uploader: UploaderInterface = Uploader(http_client, self.image_folder)
-        parser: ParserInterface = Parser(crawler, url_generator, uploader)
+        uploader: UploaderInterface = Uploader(http_client, self.image_folder, logger)
+        parser: ParserInterface = Parser(crawler, url_generator, uploader, logger)
         categories: List[Category] = parser.parse()
-        writer: WriterInterface = CsvWriter()
+        writer: WriterInterface = CsvWriter(logger)
         writer.write(categories, self.csv_folder)
