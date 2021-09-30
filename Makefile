@@ -27,3 +27,6 @@ analyse:
 
 tests:
 	$(PYTHON) -m pytest --cov=./src --cov-report=html
+
+run:
+	$(PYTHON) main.py
