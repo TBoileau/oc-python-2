@@ -1,8 +1,9 @@
 """Imported modules/packages"""
-from os.path import isfile
 from typing import Optional
 
 from urllib.parse import urlparse
+
+import os
 from requests import Response
 
 from src.http.http_client_interface import HttpClientInterface
@@ -15,24 +16,24 @@ class Uploader(UploaderInterface):
     Uploader implementation
     """
 
-    def __init__(self, http_client: HttpClientInterface, destination: str):
+    def __init__(self, http_client: HttpClientInterface, directory: str):
         """
         Constructor
 
         :param http_client:
-        :param destination:
+        :param directory:
         """
         self.__http_client: HttpClientInterface = http_client
-        self.__destination: str = destination
+        self.__directory: str = directory
 
     def upload(self, source: Url) -> Optional[Url]:
         response: Response = self.__http_client.request(source.url)
         if response.status_code != 200:
             return None
 
-        destination_url: Url = Url(urlparse(f"{self.__destination}/{source.partial}"))
-        if not isfile(destination_url.url):
-            with open(destination_url.url, "wb") as file:
+        dir_url: Url = Url(urlparse(os.path.join(self.__directory, source.partial)))
+        if not os.path.isfile(dir_url.url):
+            with open(dir_url.url, "wb") as file:
                 file.write(response.content)
 
-        return destination_url
+        return dir_url
