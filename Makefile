@@ -11,6 +11,7 @@ prepare:
 	python3 -m venv $(VENV_NAME)
 
 install:
+	pip install --no-cache-dir wheel
 	${PYTHON} -m pip install -r requirements.txt
 
 clean:
