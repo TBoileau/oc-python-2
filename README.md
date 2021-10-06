@@ -7,7 +7,8 @@
 ## Installation
 Dans un premier temps, cloner le repository :
 ```
-git clone https://github.com/TBoileau/oc-python-3.git
+git clone https://github.com/TBoileau/oc-python-2.git
+cd oc-python-2
 ```
 
 Préparer votre environnement :

@@ -3,7 +3,7 @@
 Veuillez prendre un moment pour prendre connaissance de ce document afin de suivre facilement le processus de contribution.
 
 ## Issues
-[Issues](https://github.com/TBoileau/oc-python-3/issues) est le canal idéal pour les rapports de bug, les nouvelles fonctionnalités ou pour soumètre une `pull requests`, cependant veuillez a bien respecter les restrictions suivantes :
+[Issues](https://github.com/TBoileau/oc-python-2/issues) est le canal idéal pour les rapports de bug, les nouvelles fonctionnalités ou pour soumètre une `pull requests`, cependant veuillez a bien respecter les restrictions suivantes :
 * N'utiliser par ce canal pour vos demandes d'aide personnelles (utilisez [Stack Overflow](http://stackoverflow.com/)).
 * Il est interdit d'insulter ou d'offenser d'une quelconque manière en commentaire d'un `issue`. Respectez les opinions des autres, et rester concentré sur la discussion principale.
 * Chaque issue est catégorisée par les labels suivants :
@@ -32,7 +32,7 @@ Veuillez demander avant de poster votre `pull request`, autrement vous risquez d
 Suivez ce processus afin de proposer une `pull request` qui respecte les bonnes pratiques :
 1. Clonez le repository :
     ```
-    git clone https://github.com/TBoileau/oc-python-3
+    git clone https://github.com/TBoileau/oc-python-2
     ```
 2. Créez une nouvelle branche qui contiendra votre fonctionnalité, modification ou correction :
     * Pour une nouvelle fonctionnalité ou modification :
